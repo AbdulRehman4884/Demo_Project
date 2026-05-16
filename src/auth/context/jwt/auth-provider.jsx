@@ -52,6 +52,14 @@ const reducer = (state, action) => {
 
 const STORAGE_KEY = 'accessToken';
 
+function clearAuthSession() {
+  setSession(null);
+  removeAuthToken();
+  sessionStorage.removeItem('username');
+  sessionStorage.removeItem('userType');
+  sessionStorage.removeItem('email');
+}
+
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -69,40 +77,35 @@ export function AuthProvider({ children }) {
 
       const payload = jwtDecode(accessToken);
 
-      sessionStorage.setItem('username', payload.username || '');
-      sessionStorage.setItem('userType', payload.role || '');
-
       if (isValidToken(accessToken)) {
+        sessionStorage.setItem('username', payload.username || '');
+        sessionStorage.setItem('userType', payload.role || '');
         setSession(accessToken);
-
-        //    const response = await axios.get(endpoints.auth.me);
-
-        const user = undefined;
 
         dispatch({
           type: 'INITIAL',
           payload: {
             user: {
-              ...user,
               accessToken,
+              username: payload.username,
+              role: payload.role,
             },
           },
         });
-      } else {
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            user: null,
-          },
-        });
+        return;
       }
-    } catch (error) {
-      console.error(error);
+
+      clearAuthSession();
       dispatch({
         type: 'INITIAL',
-        payload: {
-          user: null,
-        },
+        payload: { user: null },
+      });
+    } catch (error) {
+      console.error(error);
+      clearAuthSession();
+      dispatch({
+        type: 'INITIAL',
+        payload: { user: null },
       });
     }
   }, []);
@@ -163,11 +166,7 @@ export function AuthProvider({ children }) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    setSession(null);
-    removeAuthToken();
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('userType');
-    sessionStorage.removeItem('email');
+    clearAuthSession();
     dispatch({
       type: 'LOGOUT',
     });
