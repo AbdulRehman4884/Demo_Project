@@ -1,4 +1,4 @@
-import { ok, okRaw, okNum } from './responses';
+import { ok, okRaw, okList, okNum } from './responses';
 import {
   MOCK_ATTENDANCE_CHECK,
   MOCK_ATTENDANCE_EMPLOYEES,
@@ -7,15 +7,22 @@ import {
   MOCK_COMPANY_EMPLOYEES,
   MOCK_COMPANY_PROFILE,
   MOCK_DASHBOARD,
+  MOCK_EMPLOYEE_FORM_DATA,
   MOCK_FACIAL_EMPLOYEES,
   MOCK_INTERVIEW_PANEL,
   MOCK_JOB_DESCRIPTIONS,
   MOCK_LOOKUP,
   MOCK_OUTSOURCE_CANDIDATES,
+  MOCK_PAST_EVALUATIONS,
   MOCK_PAYROLL_ROWS,
+  MOCK_PERFORMANCE_EVALUATION_ROWS,
   MOCK_PERFORMANCE_QUESTIONS,
+  MOCK_PERFORMANCE_REPORT,
   MOCK_PERFORMANCE_TEAMS,
+  MOCK_PERFORMANCE_WEIGHTS,
   MOCK_SCHEDULE_INTERVIEWS,
+  MOCK_SELF_EVALUATION_FORM,
+  MOCK_TEAM_LEAD_CREDENTIAL,
 } from './entities';
 
 // ----------------------------------------------------------------------
@@ -33,6 +40,10 @@ export function normalizeApiPath(url) {
 function isWriteMethod(method = 'GET') {
   const m = String(method).toUpperCase();
   return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(m);
+}
+
+function mutationOk(message = 'Saved successfully') {
+  return ok({}, message);
 }
 
 // ----------------------------------------------------------------------
@@ -95,6 +106,12 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   if (path.includes('/addattendance/getallcandidateattendancerecord')) {
     return ok(MOCK_ATTENDANCE_HISTORY);
   }
+  if (path.includes('/addattendance/addorupdate') || path.includes('/addattendance/update')) {
+    return mutationOk('Attendance saved successfully');
+  }
+  if (path.includes('/addattendance/delete')) {
+    return mutationOk('Attendance deleted');
+  }
 
   // Facial recognition
   if (path.includes('/attendancefacialrecognition/getoutsourcedcompanyemployee')) {
@@ -110,6 +127,71 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     return okNum({}, 'Face registered successfully');
   }
 
+  // Performance — questions & weights
+  if (path.includes('/performancefeedbackquestion/getperformancequestionview')) {
+    return ok(MOCK_PERFORMANCE_QUESTIONS);
+  }
+  if (path.includes('/performancequestionweightage/getweightages')) {
+    return ok(MOCK_PERFORMANCE_WEIGHTS);
+  }
+  if (path.includes('/performancefeedbackquestion/')) {
+    if (write) return mutationOk('Question saved');
+    return ok(MOCK_PERFORMANCE_QUESTIONS);
+  }
+  if (path.includes('/performancequestionweightage/')) {
+    if (write) return mutationOk('Weightages saved');
+    return ok(MOCK_PERFORMANCE_WEIGHTS);
+  }
+
+  // Performance — evaluation lists (company / team lead)
+  if (
+    path.includes('/performancefeedback/getteamleadevaluationrecords') ||
+    path.includes('/performancefeedback/getallcurrentevaluationrecords') ||
+    path.includes('/performancefeedback/getallperformancesubmissions')
+  ) {
+    return ok(MOCK_PERFORMANCE_EVALUATION_ROWS);
+  }
+  if (path.includes('/performancefeedback/getemployeeformdata')) {
+    return ok([MOCK_EMPLOYEE_FORM_DATA]);
+  }
+  if (path.includes('/performancefeedback/getselfevaluationrecord')) {
+    return ok([MOCK_SELF_EVALUATION_FORM]);
+  }
+  if (
+    path.includes('/performancefeedback/getemployeeevaluationformdata') ||
+    path.includes('/performancefeedback/getemployeeperformancereportdata')
+  ) {
+    return ok([MOCK_PERFORMANCE_REPORT]);
+  }
+  if (path.includes('/performancefeedback/')) {
+    if (write) return mutationOk('Evaluation saved');
+    return ok(MOCK_PERFORMANCE_EVALUATION_ROWS);
+  }
+
+  // Self evaluation (employee portal)
+  if (path.includes('/employeeselfevaluation/getselfevaluationrecord')) {
+    return ok([MOCK_SELF_EVALUATION_FORM]);
+  }
+  if (path.includes('/employeeselfevaluation/getemployeepastevaluationrecords')) {
+    return ok(MOCK_PAST_EVALUATIONS);
+  }
+  if (path.includes('/employeeselfevaluation/')) {
+    if (write) return mutationOk('Self evaluation saved');
+    return ok([MOCK_SELF_EVALUATION_FORM]);
+  }
+
+  // Performance teams
+  if (path.includes('/performanceevaluationteam/getallteambyname')) {
+    return ok(MOCK_PERFORMANCE_TEAMS);
+  }
+  if (path.includes('/performanceevaluationteam/getteamleadcredential')) {
+    return ok([MOCK_TEAM_LEAD_CREDENTIAL]);
+  }
+  if (path.includes('/performanceevaluationteam/')) {
+    if (write) return mutationOk('Team saved');
+    return ok(MOCK_PERFORMANCE_TEAMS);
+  }
+
   // Interviews & jobs
   if (path.includes('/scheduleinterview/getcompanyscheduleinterviewview')) {
     return ok(MOCK_SCHEDULE_INTERVIEWS);
@@ -121,33 +203,19 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     return ok(MOCK_INTERVIEW_PANEL);
   }
   if (path.includes('/jobdescription/')) {
-    if (write) return okNum({}, 'Job description saved');
+    if (write) return mutationOk('Job description saved');
     return ok(MOCK_JOB_DESCRIPTIONS);
   }
   if (path.includes('/interviewpanel/')) {
-    if (write) return okNum({}, 'Interview panel saved');
+    if (write) return mutationOk('Interview panel saved');
     return ok(MOCK_INTERVIEW_PANEL);
   }
   if (path.includes('/interviewquestion/')) {
     return ok(MOCK_PERFORMANCE_QUESTIONS);
   }
   if (path.includes('/interviewfeedback/')) {
-    if (write) return okNum({}, 'Feedback saved');
+    if (write) return mutationOk('Feedback saved');
     return ok(MOCK_SCHEDULE_INTERVIEWS);
-  }
-
-  // Performance
-  if (path.includes('/performancefeedbackquestion/') || path.includes('/performancequestionweightage/')) {
-    if (write) return okNum({}, 'Saved successfully');
-    return ok(MOCK_PERFORMANCE_QUESTIONS);
-  }
-  if (path.includes('/performancefeedback/') || path.includes('/employeeselfevaluation/')) {
-    if (write) return okNum({}, 'Evaluation saved');
-    return ok(MOCK_PERFORMANCE_QUESTIONS);
-  }
-  if (path.includes('/performanceevaluationteam/')) {
-    if (write) return okNum({}, 'Team saved');
-    return ok(MOCK_PERFORMANCE_TEAMS);
   }
 
   // Payroll / payments
@@ -159,76 +227,78 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     path.includes('/hrmstoemployeepayment/') ||
     path.includes('/employeesalaryinfo/')
   ) {
-    if (write) return okNum({}, 'Payment saved');
+    if (write) return mutationOk('Payment saved');
     return ok(MOCK_PAYROLL_ROWS);
   }
   if (path.includes('/candidateofferedjob/')) {
-    if (write) return okNum({}, 'Offer updated');
+    if (write) return mutationOk('Offer updated');
     return ok(MOCK_JOB_DESCRIPTIONS);
   }
 
-  // Lookups (country, state, city, bank, etc.)
-  if (path.includes('/country/')) return ok(MOCK_LOOKUP('Country'));
-  if (path.includes('/state/')) return ok(MOCK_LOOKUP('State'));
-  if (path.includes('/city/')) return ok(MOCK_LOOKUP('City'));
-  if (path.includes('/bank/')) return ok(MOCK_LOOKUP('Bank'));
-  if (path.includes('/skill/')) return ok(MOCK_LOOKUP('Skill'));
-  if (path.includes('/profession/')) return ok(MOCK_LOOKUP('Profession'));
-  if (path.includes('/designation/')) return ok(MOCK_LOOKUP('Designation'));
-  if (path.includes('/education/')) return ok(MOCK_LOOKUP('Education'));
-  if (path.includes('/companytype/')) return ok(MOCK_LOOKUP('Company Type'));
+  // Lookups
+  if (path.includes('/country/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Country'));
+  if (path.includes('/state/')) return write ? mutationOk() : ok(MOCK_LOOKUP('State'));
+  if (path.includes('/city/')) return write ? mutationOk() : ok(MOCK_LOOKUP('City'));
+  if (path.includes('/bank/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Bank'));
+  if (path.includes('/skill/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Skill'));
+  if (path.includes('/profession/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Profession'));
+  if (path.includes('/designation/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Designation'));
+  if (path.includes('/education/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Education'));
+  if (path.includes('/companytype/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Company Type'));
   if (path.includes('/employee/getall')) return ok(MOCK_COMPANY_EMPLOYEES);
 
-  // Auth / user profile (forms)
+  // Auth / user profile
   if (path.includes('/login')) {
     return okNum({ username: 'company', userType: 'co', token: 'mock' });
   }
+  if (path.includes('/userprofile/getallexistingusername')) {
+    return okList(['company', 'employee', 'superadmin', 'teamlead1']);
+  }
   if (path.includes('/userprofile/')) {
-    if (write) return okNum({}, 'Saved successfully');
-    return ok(['demo_user_1', 'demo_user_2']);
+    if (write) return mutationOk('Profile saved');
+    return okList(['company', 'employee']);
   }
 
   // Resume / mindee / offer letter
   if (path.includes('/mindee/') || path.includes('/offerletter')) {
-    return okNum({ jobId: 'mock-job-1', status: 'completed' });
+    return mutationOk('Processed successfully');
   }
 
   // Email
   if (path.includes('/email/')) {
-    return okNum({}, 'Email sent');
+    return mutationOk('Email sent');
   }
 
   // Template / excel
   if (path.includes('/filetemplates/') || path.includes('/uploadexcelfile')) {
-    return okNum({}, 'File processed');
+    return mutationOk('File processed');
   }
 
   // Outsourced employee view
   if (path.includes('/companyoutsourcedemployee/')) {
-    if (write) return okNum({}, 'Updated');
+    if (write) return mutationOk('Updated');
     return ok(MOCK_OUTSOURCE_CANDIDATES);
   }
 
-  // Demo template pages (chat, mail, kanban, calendar, product)
+  // Template demo APIs
   if (path.includes('/api/chat')) return ok([]);
   if (path.includes('/api/mail')) return ok([]);
-  if (path.includes('/api/kanban')) return ok({});
+  if (path.includes('/api/kanban')) return okRaw({});
   if (path.includes('/api/calendar')) return ok([]);
   if (path.includes('/api/product')) return ok(MOCK_LOOKUP('Product', 6));
   if (path.includes('/api/post')) return ok(MOCK_LOOKUP('Post', 5));
 
-  // Mutations: pretend success
+  // Default mutation
   if (write && path.includes('/api/')) {
-    return okNum({}, 'Saved successfully');
+    return mutationOk();
   }
 
-  // Generic GET lists
   if (!write && path.includes('/getall')) {
-    return ok(MOCK_LOOKUP('Record'));
+    return ok(MOCK_LOOKUP('Record', 6));
   }
 
   if (!write && path.includes('/api/')) {
-    return ok(MOCK_LOOKUP('Item', 5));
+    return ok(MOCK_LOOKUP('Item', 6));
   }
 
   return null;

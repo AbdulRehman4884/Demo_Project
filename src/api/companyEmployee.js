@@ -19,6 +19,7 @@ export function useAddOne() {
   const { data, error, isValidating } = useSWR(null, submitFormAdd, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitFormAdd,
@@ -37,6 +38,7 @@ export function useGetAllCompanyEmployee() {
   const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -45,7 +47,7 @@ export function useGetAllCompanyEmployee() {
 
   const memoizedValue = useMemo(
     () => ({
-      companyEmployeeList: data?.data.filter((item) => item.employeeStatus !== 2) || [],
+      companyEmployeeList: data?.data?.filter((item) => item.employeeStatus !== 2) || [],
       companyEmployeeLoading: isLoading,
       errors: error,
       validation: isValidating,
@@ -69,6 +71,7 @@ export function useGetAllInternalCompanyEmployee() {
   const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -105,6 +108,7 @@ export function useGetOnBoardingEmployee() {
   const { data, error, isValidating } = useSWR(null, GetOnBoardingEmployee, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     GetOnBoardingEmployee,
@@ -125,6 +129,7 @@ export function useConfirmEmployeeJoined() {
   const { data, error, isValidating } = useSWR(null, ConfirmEmployeeJoined, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     ConfirmEmployeeJoined,
@@ -155,6 +160,7 @@ export function useUploadExcelOne() {
   const { data, error, isValidating } = useSWR(null, submitExcel, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitExcel,
@@ -218,6 +224,7 @@ export function useEmployeeUpdateOne() {
   const { data, error, isValidating } = useSWR(null, submitFormEmployeeUpdate, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitFormEmployeeUpdate,

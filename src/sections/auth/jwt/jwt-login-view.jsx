@@ -97,6 +97,8 @@ export default function JwtLoginView() {
           router.push(PATH_AFTER_LOGIN_EMPLOYEE);
         } else if (mockUser.userType === 'rc') {
           router.push(PATH_AFTER_LOGIN_NEW_USER);
+        } else if (mockUser.userType === 'pe') {
+          router.push(paths.dashboard.setup.PerformanceEvaluationPage);
         } else {
           router.push(PATH_AFTER_LOGIN);
         }

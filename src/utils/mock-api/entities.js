@@ -145,21 +145,17 @@ export const MOCK_JOB_DESCRIPTIONS = [1, 2].map((id) =>
   })
 );
 
-export const MOCK_PERFORMANCE_QUESTIONS = [1, 2, 3, 4].map((id) =>
-  row(id, {
-    question: `Performance question ${id}?`,
-    weightage: 10 + id * 5,
-    category: id % 2 === 0 ? 'Technical' : 'Behavioral',
-  })
-);
-
-export const MOCK_PERFORMANCE_TEAMS = [1, 2].map((id) =>
-  row(id, {
-    teamName: `Team ${id}`,
-    teamLeadName: _mock.fullName(id),
-    memberCount: 3 + id,
-  })
-);
+export {
+  MOCK_PERFORMANCE_QUESTIONS,
+  MOCK_PERFORMANCE_WEIGHTS,
+  MOCK_PERFORMANCE_EVALUATION_ROWS,
+  MOCK_PERFORMANCE_TEAMS,
+  MOCK_EMPLOYEE_FORM_DATA,
+  MOCK_SELF_EVALUATION_FORM,
+  MOCK_PAST_EVALUATIONS,
+  MOCK_PERFORMANCE_REPORT,
+  MOCK_TEAM_LEAD_CREDENTIAL,
+} from './performance-data';
 
 export const MOCK_PAYROLL_ROWS = [1, 2, 3, 4].map((id) =>
   row(id, {

@@ -41,6 +41,12 @@ export const MOCK_PORTAL_USERS = [
     email: 'employee.demo@localhost',
   },
   {
+    username: 'teamlead',
+    password: 'teamlead123',
+    userType: 'pe',
+    email: 'teamlead.demo@localhost',
+  },
+  {
     username: 'newcandidate',
     password: 'candidate123',
     userType: 'rc',

@@ -15,6 +15,7 @@ export function useGetSelfEvaluationRecord() {
   const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -23,7 +24,7 @@ export function useGetSelfEvaluationRecord() {
 
   const memoizedValue = useMemo(
     () => ({
-      selfEvaluationRecord: data || [],
+      selfEvaluationRecord: data ?? { code: '200', data: [] },
       selfEvaluationRecordLoading: isLoading,
       errors: error,
       validation: isValidating,

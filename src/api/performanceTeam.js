@@ -46,6 +46,7 @@ export function useGetAllPerformanceTeam() {
   const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -54,7 +55,7 @@ export function useGetAllPerformanceTeam() {
 
   const memoizedValue = useMemo(
     () => ({
-      performanceTeamList: data?.data.filter((item) => item.employeeStatus !== 2) || [],
+      performanceTeamList: data?.data?.filter((item) => item.employeeStatus !== 2) || [],
       performanceTeamLoading: isLoading,
       errors: error,
       validation: isValidating,

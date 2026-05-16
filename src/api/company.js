@@ -16,6 +16,7 @@ export function useGetCompanyByName() {
   const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -47,6 +48,7 @@ export function useGetAllCompanies() {
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -55,7 +57,7 @@ export function useGetAllCompanies() {
 
   const memoizedValue = useMemo(
     () => ({
-      companyList: data?.data.filter((item) => item.statusId !== 2) || [],
+      companyList: data?.data?.filter((item) => item.statusId !== 2) || [],
       companyLoading: isLoading,
       errors: error,
       validation: isValidating,
@@ -91,6 +93,7 @@ export function useAddOne() {
   const { data, error, isValidating } = useSWR(null, submitFormAdd, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitFormAdd,
@@ -111,6 +114,7 @@ export function useAddPublic() {
   const { data, error, isValidating } = useSWR(null, submitFormAdd, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitFormAdd,
@@ -141,6 +145,7 @@ export function useUpdateOne() {
   const { data, error, isValidating } = useSWR(null, submitFormUpdate, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
   return {
     submitFormUpdate,
