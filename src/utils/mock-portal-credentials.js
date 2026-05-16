@@ -103,7 +103,10 @@ export const MOCK_EMPLOYEE_DASHBOARD = {
   companyname: 'Demo Company',
   currentSalary: 85000,
   performanceAverageScore: 78,
-  ScheduleInfo: [{ label: 'Scheduled', value: 2 }],
+  ScheduleInfo: [
+    { label: 'Completed', value: 3 },
+    { label: 'Upcoming', value: 2 },
+  ],
   scheduleInfo: [
     { label: 'Completed', value: 3 },
     { label: 'Upcoming', value: 2 },

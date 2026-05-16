@@ -41,9 +41,11 @@ import { fetcher, fetcherPost, endpoints } from 'src/utils/axios';
 export function useGetAllPerformanceTeam() {
   const URL = endpoints.performanceTeam.GetAllTeambyName;
 
-  const username = sessionStorage.getItem('username');
+  const username =
+    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('username') : null;
+  const swrKey = username ? [URL, username] : null;
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
+  const { data, isLoading, error, isValidating } = useSWR(swrKey, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,

@@ -74,6 +74,8 @@ export const MOCK_OUTSOURCE_CANDIDATES = MOCK_CANDIDATES.map((c) => ({
   ...c,
   companyName: 'Demo Technologies Pvt Ltd',
   outsourced: true,
+  status: 'Active',
+  averagePerformanceScore: 72 + (c.id || 1) * 3,
 }));
 
 export const MOCK_ATTENDANCE_EMPLOYEES = MOCK_COMPANY_EMPLOYEES.map((e) => ({
@@ -100,19 +102,30 @@ export const MOCK_ATTENDANCE_HISTORY = [1, 2, 3].map((id) => ({
 export const MOCK_LOOKUP = (prefix, count = 8) =>
   Array.from({ length: count }, (_, i) => {
     const id = i + 1;
+    const label = `${prefix} ${id}`;
     return row(id, {
-      name: `${prefix} ${id}`,
-      title: `${prefix} ${id}`,
+      name: label,
+      fullName: label,
+      title: label,
+      code: `${String(prefix).replace(/\s/g, '').slice(0, 3).toUpperCase()}-${id}`,
       description: _mock.description(id),
+      countryId: 1,
+      stateId: id <= 3 ? 1 : 2,
+      cityId: id,
       countryName: 'Pakistan',
       stateName: 'Sindh',
       cityName: 'Karachi',
-      skillName: `Skill ${id}`,
-      professionName: `Profession ${id}`,
-      designationName: `Designation ${id}`,
-      educationName: `Degree ${id}`,
-      bankName: `Bank ${id}`,
-      companyTypeName: `Type ${id}`,
+      skillName: label,
+      skillId: id,
+      professionName: label,
+      professionId: id,
+      designationName: label,
+      designationId: String(id),
+      educationName: label,
+      educationId: id,
+      bankName: label,
+      bankId: id,
+      companyTypeName: label,
     });
   });
 

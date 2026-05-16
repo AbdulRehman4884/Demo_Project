@@ -39,6 +39,16 @@ import {
   MOCK_COMPANY_PAYMENT_ACCOUNT,
   parseRequestUsername,
 } from './profile-data';
+import {
+  MOCK_COMPANIES_VIEW,
+  MOCK_HRMS_PAYMENT_ROWS,
+  MOCK_EMPLOYEE_SALARY_ROWS,
+  MOCK_EMPLOYEE_SALARY_SLIP,
+  MOCK_HRMS_ACCOUNT_LIST,
+  MOCK_SCHEDULE_INTERVIEWS_FULL,
+  MOCK_OUTSOURCE_CANDIDATES_FULL,
+  MOCK_INTERVIEW_PANEL_FULL,
+} from './portal-pages-data';
 
 // ----------------------------------------------------------------------
 
@@ -79,9 +89,12 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   }
 
   // Company / candidate profiles
-  if (path.includes('/company/getcompanybyusername') || path.includes('/company/getcompanyview')) {
+  if (path.includes('/company/getcompanybyusername')) {
     const username = parseRequestUsername(body, 'company');
     return ok([buildMockCompanyProfile(username)]);
+  }
+  if (path.includes('/company/getcompanyview')) {
+    return ok(MOCK_COMPANIES_VIEW);
   }
   if (path.includes('/candidate/getcandidatebyusername')) {
     const username = parseRequestUsername(body, 'employee');
@@ -94,7 +107,7 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     return ok([MOCK_CANDIDATES[0]]);
   }
   if (path.includes('/candidate/getoutsourcedemployeedetail')) {
-    return ok(MOCK_OUTSOURCE_CANDIDATES);
+    return ok(MOCK_OUTSOURCE_CANDIDATES_FULL);
   }
   if (path.includes('/candidate/getall')) {
     return ok(MOCK_CANDIDATES);
@@ -201,7 +214,10 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   }
 
   // Performance teams
-  if (path.includes('/performanceevaluationteam/getallteambyname')) {
+  if (
+    path.includes('/performanceevaluationteam/getallteambyname') ||
+    path.includes('/performanceevaluationteam/getall')
+  ) {
     return ok(MOCK_PERFORMANCE_TEAMS);
   }
   if (path.includes('/performanceevaluationteam/getteamleadcredential')) {
@@ -214,10 +230,10 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
 
   // Interviews & jobs
   if (path.includes('/scheduleinterview/getcompanyscheduleinterviewview')) {
-    return ok(MOCK_SCHEDULE_INTERVIEWS);
+    return ok(MOCK_SCHEDULE_INTERVIEWS_FULL);
   }
   if (path.includes('/scheduleinterview/getcandidatescheduleinterviewview')) {
-    return ok(MOCK_SCHEDULE_INTERVIEWS);
+    return ok(MOCK_SCHEDULE_INTERVIEWS_FULL);
   }
   if (path.includes('/scheduleinterview/getavailableinterviewers')) {
     return ok(MOCK_INTERVIEW_PANEL);
@@ -236,13 +252,16 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   if (path.includes('/country/')) return write ? mutationOk() : ok(MOCK_COUNTRIES);
   if (path.includes('/state/')) return write ? mutationOk() : ok(MOCK_STATES);
   if (path.includes('/city/')) return write ? mutationOk() : ok(MOCK_CITIES);
-  if (path.includes('/profession/')) return write ? mutationOk() : ok(MOCK_PROFESSIONS);
+  if (path.includes('/profession/geteduprofview') || path.includes('/profession/')) {
+    if (write) return mutationOk();
+    return ok(MOCK_PROFESSIONS);
+  }
   if (path.includes('/designation/')) return write ? mutationOk() : ok(MOCK_DESIGNATIONS);
   if (path.includes('/education/')) return write ? mutationOk() : ok(MOCK_EDUCATIONS);
   if (path.includes('/skill/')) return write ? mutationOk() : ok(MOCK_SKILLS);
   if (path.includes('/interviewpanel/')) {
     if (write) return mutationOk('Interview panel saved');
-    return ok(MOCK_INTERVIEW_PANEL);
+    return ok(MOCK_INTERVIEW_PANEL_FULL);
   }
   if (path.includes('/interviewquestion/')) {
     return ok(MOCK_PERFORMANCE_QUESTIONS);
@@ -250,6 +269,20 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   if (path.includes('/interviewfeedback/')) {
     if (write) return mutationOk('Feedback saved');
     return ok(MOCK_SCHEDULE_INTERVIEWS);
+  }
+
+  // HRMS payments & employee salary
+  if (path.includes('/hrmstoemployeepayment/gethrmspaymentview')) {
+    return ok(MOCK_HRMS_PAYMENT_ROWS);
+  }
+  if (path.includes('/hrmspaymentinfo/getall')) {
+    return ok(MOCK_HRMS_ACCOUNT_LIST);
+  }
+  if (path.includes('/employeesalaryinfo/getemployeesalaryinfoview')) {
+    return ok(MOCK_EMPLOYEE_SALARY_ROWS);
+  }
+  if (path.includes('/employeesalaryinfo/getemployeesalaryslip')) {
+    return ok([MOCK_EMPLOYEE_SALARY_SLIP]);
   }
 
   // Company payroll (grid + invoice dialogs)
@@ -315,7 +348,11 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   // Outsourced employee view
   if (path.includes('/companyoutsourcedemployee/')) {
     if (write) return mutationOk('Updated');
-    return ok(MOCK_OUTSOURCE_CANDIDATES);
+    return ok(MOCK_OUTSOURCE_CANDIDATES_FULL);
+  }
+
+  if (path.includes('/companyemployee/getall')) {
+    return ok(MOCK_COMPANY_EMPLOYEES);
   }
 
   // Template demo APIs
