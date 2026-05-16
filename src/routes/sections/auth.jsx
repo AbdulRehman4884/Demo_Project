@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
-// import { GuestGuard } from 'src/auth/guard';
+import { GuestGuard } from 'src/auth/guard';
+import { USE_FRONTEND_ONLY_AUTH } from 'src/utils/mock-portal-credentials';
 import CompactLayout from 'src/layouts/compact';
 import AuthClassicLayout from 'src/layouts/auth/classic';
 
@@ -74,15 +75,21 @@ const authAmplify = {
   ],
 };
 
-const authJwt = {
-  path: 'jwt',
-  element: (
-    // <GuestGuard>
+const jwtAuthOutlet = USE_FRONTEND_ONLY_AUTH ? (
+  <GuestGuard>
     <Suspense fallback={<SplashScreen />}>
       <Outlet />
     </Suspense>
-    // </GuestGuard>
-  ),
+  </GuestGuard>
+) : (
+  <Suspense fallback={<SplashScreen />}>
+    <Outlet />
+  </Suspense>
+);
+
+const authJwt = {
+  path: 'jwt',
+  element: jwtAuthOutlet,
   children: [
     {
       path: 'login',

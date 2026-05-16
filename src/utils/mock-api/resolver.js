@@ -11,6 +11,14 @@ import {
   MOCK_FACIAL_EMPLOYEES,
   MOCK_INTERVIEW_PANEL,
   MOCK_JOB_DESCRIPTIONS,
+  MOCK_JOB_FILTER_CANDIDATES,
+  MOCK_COUNTRIES,
+  MOCK_STATES,
+  MOCK_CITIES,
+  MOCK_PROFESSIONS,
+  MOCK_DESIGNATIONS,
+  MOCK_EDUCATIONS,
+  MOCK_SKILLS,
   MOCK_LOOKUP,
   MOCK_OUTSOURCE_CANDIDATES,
   MOCK_PAST_EVALUATIONS,
@@ -24,6 +32,13 @@ import {
   MOCK_SELF_EVALUATION_FORM,
   MOCK_TEAM_LEAD_CREDENTIAL,
 } from './entities';
+import { MOCK_COMPANY_PAYROLL_LIST, buildMockInvoiceDetails } from './company-payroll-data';
+import {
+  buildMockCompanyProfile,
+  buildMockCandidateProfile,
+  MOCK_COMPANY_PAYMENT_ACCOUNT,
+  parseRequestUsername,
+} from './profile-data';
 
 // ----------------------------------------------------------------------
 
@@ -65,10 +80,15 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
 
   // Company / candidate profiles
   if (path.includes('/company/getcompanybyusername') || path.includes('/company/getcompanyview')) {
-    return ok(MOCK_COMPANY_PROFILE);
+    const username = parseRequestUsername(body, 'company');
+    return ok([buildMockCompanyProfile(username)]);
   }
   if (path.includes('/candidate/getcandidatebyusername')) {
-    return ok([MOCK_CANDIDATES[0]]);
+    const username = parseRequestUsername(body, 'employee');
+    return ok([buildMockCandidateProfile(username)]);
+  }
+  if (path.includes('/companypaymentinfo/getcompanyaccountbyname')) {
+    return ok(MOCK_COMPANY_PAYMENT_ACCOUNT);
   }
   if (path.includes('/candidate/getcandidatebyid')) {
     return ok([MOCK_CANDIDATES[0]]);
@@ -202,10 +222,24 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
   if (path.includes('/scheduleinterview/getavailableinterviewers')) {
     return ok(MOCK_INTERVIEW_PANEL);
   }
+  if (path.includes('/jobdescription/getbyusername') || path.includes('/jobdescription/getall')) {
+    return ok(MOCK_JOB_DESCRIPTIONS);
+  }
+  if (path.includes('/jobdescription/filtercandidates')) {
+    return ok(MOCK_JOB_FILTER_CANDIDATES);
+  }
   if (path.includes('/jobdescription/')) {
     if (write) return mutationOk('Job description saved');
     return ok(MOCK_JOB_DESCRIPTIONS);
   }
+
+  if (path.includes('/country/')) return write ? mutationOk() : ok(MOCK_COUNTRIES);
+  if (path.includes('/state/')) return write ? mutationOk() : ok(MOCK_STATES);
+  if (path.includes('/city/')) return write ? mutationOk() : ok(MOCK_CITIES);
+  if (path.includes('/profession/')) return write ? mutationOk() : ok(MOCK_PROFESSIONS);
+  if (path.includes('/designation/')) return write ? mutationOk() : ok(MOCK_DESIGNATIONS);
+  if (path.includes('/education/')) return write ? mutationOk() : ok(MOCK_EDUCATIONS);
+  if (path.includes('/skill/')) return write ? mutationOk() : ok(MOCK_SKILLS);
   if (path.includes('/interviewpanel/')) {
     if (write) return mutationOk('Interview panel saved');
     return ok(MOCK_INTERVIEW_PANEL);
@@ -218,7 +252,18 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     return ok(MOCK_SCHEDULE_INTERVIEWS);
   }
 
-  // Payroll / payments
+  // Company payroll (grid + invoice dialogs)
+  if (path.includes('/salarydistribute/getcompanypayrollview')) {
+    return ok(MOCK_COMPANY_PAYROLL_LIST);
+  }
+  if (path.includes('/salarydistribute/getinvoicedetailsview')) {
+    return ok([buildMockInvoiceDetails(body)]);
+  }
+  if (path.includes('/salarydistribute/addlist')) {
+    return mutationOk('Payroll processed successfully');
+  }
+
+  // Payroll / payments (other screens)
   if (
     path.includes('/salarydistribute/') ||
     path.includes('/companypaymentinfo/') ||
@@ -235,15 +280,8 @@ export function resolveMockApiResponse(url, method = 'GET', body) {
     return ok(MOCK_JOB_DESCRIPTIONS);
   }
 
-  // Lookups
-  if (path.includes('/country/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Country'));
-  if (path.includes('/state/')) return write ? mutationOk() : ok(MOCK_LOOKUP('State'));
-  if (path.includes('/city/')) return write ? mutationOk() : ok(MOCK_LOOKUP('City'));
+  // Lookups (bank and generic)
   if (path.includes('/bank/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Bank'));
-  if (path.includes('/skill/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Skill'));
-  if (path.includes('/profession/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Profession'));
-  if (path.includes('/designation/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Designation'));
-  if (path.includes('/education/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Education'));
   if (path.includes('/companytype/')) return write ? mutationOk() : ok(MOCK_LOOKUP('Company Type'));
   if (path.includes('/employee/getall')) return ok(MOCK_COMPANY_EMPLOYEES);
 

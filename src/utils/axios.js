@@ -232,7 +232,7 @@ export const endpoints = {
   jobDescripton: {
     getAll: '/api/JobDescription/getAll',
     addOne: '/api/JobDescription/add',
-    getByUsername: 'api/JobDescription/getByUsername/',
+    getByUsername: '/api/JobDescription/getByUsername/',
     updateOne: '/api/JobDescription/update',
     filterCandidate: '/api/JobDescription/FilterCandidates',
   },

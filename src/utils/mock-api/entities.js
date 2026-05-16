@@ -136,14 +136,17 @@ export const MOCK_INTERVIEW_PANEL = [1, 2, 3].map((id) =>
   })
 );
 
-export const MOCK_JOB_DESCRIPTIONS = [1, 2].map((id) =>
-  row(id, {
-    jobTitle: _mock.jobTitle(id),
-    department: 'Engineering',
-    experience: `${id + 1} years`,
-    description: _mock.description(id),
-  })
-);
+export {
+  MOCK_JOB_DESCRIPTIONS,
+  MOCK_JOB_FILTER_CANDIDATES,
+  MOCK_COUNTRIES,
+  MOCK_STATES,
+  MOCK_CITIES,
+  MOCK_PROFESSIONS,
+  MOCK_DESIGNATIONS,
+  MOCK_EDUCATIONS,
+  MOCK_SKILLS,
+} from './job-description-data';
 
 export {
   MOCK_PERFORMANCE_QUESTIONS,

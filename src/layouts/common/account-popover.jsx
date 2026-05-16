@@ -29,7 +29,7 @@ const OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: paths.dashboard.user.profile,
+    linkTo: paths.dashboard.setup.UserProfilePage,
   },
   // {
   //   label: 'Settings',
@@ -54,7 +54,7 @@ export default function AccountPopover() {
     try {
       await logout();
       popover.onClose();
-      router.replace('/');
+      router.replace(paths.auth.jwt.login);
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });

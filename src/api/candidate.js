@@ -73,16 +73,19 @@ export function useGetCandidateByName() {
   const URL = endpoints.candidate.ByUserName;
   // const URL = `http://localhost:5010${endpoints.businessGroup.get}`;
 
-  const username = sessionStorage.getItem('username'); // Replace with the actual username
+  const username =
+    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('username') : null;
+  const swrKey = username ? [URL, username] : null;
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
+  const { data, isLoading, error, isValidating } = useSWR(swrKey, () => fetcherPost(URL, username), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
-    await mutate(URL);
-  }, [URL]);
+    if (swrKey) await mutate(swrKey);
+  }, [swrKey]);
 
   const memoizedValue = useMemo(
     () => ({

@@ -28,9 +28,21 @@ const TOKEN_KEY = 'MYtokenReturn'; // Set a unique key for your token in local s
 //const TOKEN_KEY = TOKEN_KEY1.access_token;
 
 export const setAuthToken = (newToken) => {
+  if (!newToken || newToken === 'null' || newToken === 'undefined') {
+    localStorage.removeItem(TOKEN_KEY);
+    return;
+  }
   localStorage.setItem(TOKEN_KEY, newToken);
 };
 
+export const removeAuthToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+};
+
 export const getAuthToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token || token === 'null' || token === 'undefined') {
+    return null;
+  }
+  return token;
 };

@@ -10,12 +10,19 @@ import { fetcher, fetcherPost, endpoints } from 'src/utils/axios';
 export function useGetAllCompanyPayrollInfo() {
   const URL = endpoints.companyPayrollInfo.getCompanyPayrollView;
 
-  const username = sessionStorage.getItem('username'); // Replace with the actual username
+  const username =
+    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('username') : null;
+  const swrKey = username ? [URL, username] : null;
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, isLoading, error, isValidating } = useSWR(
+    swrKey,
+    () => fetcherPost(URL, username),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  );
   const refetchData = useCallback(async () => {
     await mutate(URL);
   }, [URL]);

@@ -5,7 +5,7 @@ import axios, { endpoints } from 'src/utils/axios';
 
 import { AuthContext } from './auth-context';
 import { setSession, isValidToken, jwtDecode } from './utils';
-import { getAuthToken, setAuthToken } from 'src/utils/storage-available';
+import { getAuthToken, setAuthToken, removeAuthToken } from 'src/utils/storage-available';
 
 // ----------------------------------------------------------------------
 
@@ -164,7 +164,10 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
-    setAuthToken(null);
+    removeAuthToken();
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('userType');
+    sessionStorage.removeItem('email');
     dispatch({
       type: 'LOGOUT',
     });
