@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { SERVICE_API } from 'src/config-global';
+import { getMockApiResponse } from 'src/utils/mock-api';
 import { getAuthToken } from './storage-available';
 import { CompanyScheduleInterview } from 'src/sections/setup/view';
 import PerformanceEvaluationTeamPage from 'src/pages/dashboard/setup/performanceEvaluationTeamPage';
@@ -46,6 +47,10 @@ export default axiosInstance;
 // ----------------------------------------------------------------------
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
+  const mock = getMockApiResponse(url, 'GET');
+  if (mock !== null) {
+    return mock;
+  }
   const res = await axiosInstance.get(url, { ...config });
   return res.data;
 };
@@ -69,6 +74,10 @@ export const fetcherBinary = async (args) => {
 };
 
 export const fetcherPost = async (url, data, config = {}) => {
+  const mock = getMockApiResponse(url, 'POST', data);
+  if (mock !== null) {
+    return mock;
+  }
   try {
     const res = await axiosInstance.post(url, data, {
       headers: {
@@ -87,6 +96,10 @@ export const fetcherPost = async (url, data, config = {}) => {
 };
 
 export const fetcherFormData = async (url, formData, config = {}) => {
+  const mock = getMockApiResponse(url, 'POST', formData);
+  if (mock !== null) {
+    return mock;
+  }
   try {
     const res = await axiosInstance.post(url, formData, {
       headers: {

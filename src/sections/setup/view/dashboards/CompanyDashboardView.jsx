@@ -43,6 +43,8 @@ export default function OverviewAppView() {
 
   const theme = useTheme();
   const { companyDashboardData, refetchData } = useGetCompanyDashboard();
+  const displayName =
+    user?.displayName || sessionStorage.getItem('username') || sessionStorage.getItem('email') || 'User';
 
   const settings = useSettingsContext();
 
@@ -51,7 +53,7 @@ export default function OverviewAppView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
+            title={`Welcome back 👋 \n ${displayName}`}
             description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
             img={<SeoIllustration />}
             action={
@@ -111,11 +113,7 @@ export default function OverviewAppView() {
         <Grid xs={12} md={4} lg={4}>
           <EcommerceSaleByGender
             title="Daily Attendance"
-            total={
-              companyDashboardData ?? companyDashboardData?.totalEmployee
-                ? companyDashboardData.totalEmployee
-                : 0
-            }
+            total={companyDashboardData?.totalEmployee ?? 0}
             chart={{
               series: companyDashboardData?.dailyAttendance ?? [],
             }}

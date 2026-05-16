@@ -1,5 +1,6 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
+import 'src/utils/mock-api/install-fetch';
 
 // i18n
 import 'src/locales/i18n';

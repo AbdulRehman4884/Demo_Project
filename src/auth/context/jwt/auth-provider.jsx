@@ -58,12 +58,21 @@ export function AuthProvider({ children }) {
   const initialize = useCallback(async () => {
     try {
       const accessToken = getAuthToken();
+
+      if (!accessToken) {
+        dispatch({
+          type: 'INITIAL',
+          payload: { user: null },
+        });
+        return;
+      }
+
       const payload = jwtDecode(accessToken);
 
-      sessionStorage.setItem('username', payload.username);
-      sessionStorage.setItem('userType', payload.role);
+      sessionStorage.setItem('username', payload.username || '');
+      sessionStorage.setItem('userType', payload.role || '');
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (isValidToken(accessToken)) {
         setSession(accessToken);
 
         //    const response = await axios.get(endpoints.auth.me);
@@ -163,6 +172,14 @@ export function AuthProvider({ children }) {
 
   // Frontend-only: set token + user without calling the API (used with mock credentials).
   const loginWithFrontendMock = useCallback((accessToken, userExtras = {}) => {
+    const payload = jwtDecode(accessToken);
+
+    sessionStorage.setItem('username', payload.username || userExtras.username || '');
+    sessionStorage.setItem('userType', payload.role || '');
+    if (userExtras.email) {
+      sessionStorage.setItem('email', userExtras.email);
+    }
+
     setSession(accessToken);
     setAuthToken(accessToken);
     dispatch({
@@ -170,6 +187,8 @@ export function AuthProvider({ children }) {
       payload: {
         user: {
           ...userExtras,
+          username: payload.username || userExtras.username,
+          role: payload.role,
           accessToken,
         },
       },

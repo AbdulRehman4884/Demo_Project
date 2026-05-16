@@ -111,9 +111,9 @@ export const paths = {
       analytics: `${ROOTS.DASHBOARD}/analytics`,
       banking: `${ROOTS.DASHBOARD}/banking`,
       booking: `${ROOTS.DASHBOARD}/booking`,
-      superDashboard: `${ROOTS.DASHBOARD}/superDashboard`,
-      companyDashboard: `${ROOTS.DASHBOARD}/companyDashboardPage`,
-      employeeDashboard: `${ROOTS.DASHBOARD}/employeeDashboardPage`,
+      superDashboard: `${ROOTS.DASHBOARD}/SuperDashboard`,
+      companyDashboard: `${ROOTS.DASHBOARD}/CompanyDashboardPage`,
+      employeeDashboard: `${ROOTS.DASHBOARD}/EmployeeDashboardPage`,
       file: `${ROOTS.DASHBOARD}/file`,
     },
     user: {

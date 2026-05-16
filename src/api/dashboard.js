@@ -1,9 +1,7 @@
-import useSWR, { mutate } from 'swr'; // Import the mutate function
+import useSWR, { mutate } from 'swr';
 import { useMemo, useCallback } from 'react';
 
 import { fetcher, fetcherPost, endpoints } from 'src/utils/axios';
-
-// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -13,6 +11,7 @@ export function useGetSuperDashboard() {
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    shouldRetryOnError: false,
   });
 
   const refetchData = useCallback(async () => {
@@ -21,12 +20,11 @@ export function useGetSuperDashboard() {
 
   const memoizedValue = useMemo(
     () => ({
-      dashboardData: data?.data[0] || [],
+      dashboardData: data?.data?.[0] || {},
       countryLoading: isLoading,
       errors: error,
       validation: isValidating,
       refetchData,
-      // productsEmpty: !isLoading && !data?.products.length,
     }),
     [data?.data, error, isLoading, isValidating, refetchData]
   );
@@ -39,23 +37,27 @@ export function useGetCompanyDashboard() {
 
   const username = sessionStorage.getItem('username');
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, isLoading, error, isValidating } = useSWR(
+    username ? [URL, username] : null,
+    () => fetcherPost(URL, username),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  );
 
   const refetchData = useCallback(async () => {
-    await mutate(URL);
-  }, [URL]);
+    await mutate([URL, username]);
+  }, [URL, username]);
 
   const memoizedValue = useMemo(
     () => ({
-      companyDashboardData: data?.data[0] || [],
+      companyDashboardData: data?.data?.[0] || {},
       countryLoading: isLoading,
       errors: error,
       validation: isValidating,
       refetchData,
-      // productsEmpty: !isLoading && !data?.products.length,
     }),
     [data?.data, error, isLoading, isValidating, refetchData]
   );
@@ -68,23 +70,27 @@ export function useGetEmployeeDashboard() {
 
   const username = sessionStorage.getItem('username');
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, () => fetcherPost(URL, username), {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, isLoading, error, isValidating } = useSWR(
+    username ? [URL, username] : null,
+    () => fetcherPost(URL, username),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  );
 
   const refetchData = useCallback(async () => {
-    await mutate(URL);
-  }, [URL]);
+    await mutate([URL, username]);
+  }, [URL, username]);
 
   const memoizedValue = useMemo(
     () => ({
-      EmployeeDashboardData: data?.data[0] || [],
+      EmployeeDashboardData: data?.data?.[0] || {},
       countryLoading: isLoading,
       errors: error,
       validation: isValidating,
       refetchData,
-      // productsEmpty: !isLoading && !data?.products.length,
     }),
     [data?.data, error, isLoading, isValidating, refetchData]
   );

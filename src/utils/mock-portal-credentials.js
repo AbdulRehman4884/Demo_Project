@@ -53,3 +53,57 @@ export function findMockPortalUser(username, password) {
   const p = String(password || '');
   return MOCK_PORTAL_USERS.find((row) => row.username === u && row.password === p) || null;
 }
+
+// Shown on dashboards when backend is off (frontend-only demo).
+export const MOCK_COMPANY_DASHBOARD = {
+  totalEmployee: 24,
+  totalActiveJob: 8,
+  totalPerformanceLeads: 3,
+  totalInterviewPanel: 5,
+  dailyAttendance: [
+    { label: 'Present', value: 18 },
+    { label: 'Absent', value: 6 },
+  ],
+  paymentStatus: [
+    { status: 'Pending', quantity: 4, value: 40 },
+    { status: 'Paid', quantity: 16, value: 60 },
+    { status: 'Due', quantity: 2, value: 10 },
+  ],
+  scheduledData: [
+    { label: 'Scheduled', value: 12 },
+    { label: 'Completed', value: 8 },
+    { label: 'Cancelled', value: 2 },
+  ],
+  lineGraphData: [
+    {
+      year: new Date().getFullYear(),
+      data: [
+        {
+          name: 'Employee',
+          data: [2, 4, 3, 5, 6, 4, 7, 8, 6, 5, 4, 3],
+        },
+      ],
+    },
+  ],
+};
+
+export const MOCK_SUPER_DASHBOARD = {
+  totalEmployee: 340,
+  totalNotHired: 45,
+  totalHired: 295,
+};
+
+export const MOCK_EMPLOYEE_DASHBOARD = {
+  companyname: 'Demo Company',
+  currentSalary: 85000,
+  performanceAverageScore: 78,
+  ScheduleInfo: [{ label: 'Scheduled', value: 2 }],
+  scheduleInfo: [
+    { label: 'Completed', value: 3 },
+    { label: 'Upcoming', value: 2 },
+  ],
+  barGraphData: [
+    { name: 'Present', data: [18, 20, 19, 21, 20, 22, 21, 19, 20, 18, 19, 20] },
+    { name: 'Absent', data: [2, 1, 2, 1, 2, 0, 1, 2, 1, 2, 1, 1] },
+  ],
+};
